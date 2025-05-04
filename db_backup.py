@@ -6,11 +6,18 @@ def create_backup():
     Create a backup of the active database file.
     """
     import shutil
+    import os
     try:
+        if not os.path.exists(active_db_file):
+            raise FileNotFoundError(f"Active database file '{active_db_file}' does not exist.")
         shutil.copyfile(active_db_file, backup_db_file)
         print(f"Backup of {active_db_file} created as {backup_db_file}.")
+    except FileNotFoundError as fnf_error:
+        print(f"File not found error: {fnf_error}")
+    except PermissionError as perm_error:
+        print(f"Permission error: {perm_error}")
     except Exception as e:
-        print(f"Error creating backup: {e}")
+        print(f"An unexpected error occurred while creating backup: {e}")
 
 def restore_backup():
     """
@@ -42,7 +49,6 @@ def evaluate_user_input():
         return
     else:
         print("Invalid choice. Please try again.")
-
 
 if __name__ == "__main__":
     # Call the function to evaluate user input
